@@ -94,13 +94,13 @@ if __name__ == "__main__":
           include_package_data=False,
           # data files only applies to the rpm
           data_files = [
-              ("/etc/ipf",["ipf/etc/ipf/logging.conf"]),
-              ("/etc/ipf/xsede",["ipf/etc/ipf/xsede/ca_certs.pem"]),
-              ("/etc/ipf/workflow",workflow_paths("ipf/etc/ipf/workflow")),
-              ("/etc/ipf/workflow/glue2",workflow_paths("ipf/etc/ipf/workflow/glue2")),
-              ("/etc/ipf/workflow/glue2/templates",workflow_paths("ipf/etc/ipf/workflow/glue2/templates")),
-              ("/etc/ipf/init.d",["ipf/etc/ipf/init.d/ipf-WORKFLOW"]),
-              ("/var/ipf",[])
+              ("etc/ipf",["ipf/etc/ipf/logging.conf"]),
+              ("etc/ipf/xsede",["ipf/etc/ipf/xsede/ca_certs.pem"]),
+              ("etc/ipf/workflow",workflow_paths("ipf/etc/ipf/workflow")),
+              ("etc/ipf/workflow/glue2",workflow_paths("ipf/etc/ipf/workflow/glue2")),
+              ("etc/ipf/workflow/glue2/templates",workflow_paths("ipf/etc/ipf/workflow/glue2/templates")),
+              ("etc/ipf/init.d",["ipf/etc/ipf/init.d/ipf-WORKFLOW"]),
+              ("var/ipf",["ipf/var/ipf/README.txt"])
           ],
           zip_safe=False)
     _deleteManifest()

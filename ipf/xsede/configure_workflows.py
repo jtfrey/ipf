@@ -66,32 +66,50 @@ def configure():
         writeActivityWorkflow(resource_name, activity_json)
         writeActivityInit(resource_name, module_names, env_vars)
 
-    #modules_type = getModulesType()
-    # if modules_type == "modules":
-    #    modules_json = getModulesJson()
-    # elif modules_type == "lmod":
-    #    modules_json = getLModJson()
-    extmodules_json = getExtModulesJson()
-    setSupportContact(extmodules_json)
+    modules_type = getModulesType()
+    modules_json = False
+    extmodules_json = False
+    if modules_type == "modules":
+        modules_json = getModulesJson()
+    elif modules_type == "lmod":
+        modules_json = getLModJson()
+    elif modules_type == "valet":
+        modules_json = getVALETJson()
+    else:
+        extmodules_json = getExtModulesJson()
+        setSupportContact(extmodules_json)
     services_json = getAbstractServicesJson()
-    # setResourceName(resource_name,modules_json)
-    setResourceName(resource_name, extmodules_json)
+    if modules_json:
+        setResourceName(resource_name, modules_json)
+    else:
+        setResourceName(resource_name, extmodules_json)
     setResourceName(resource_name, services_json)
-    # updateFilePublishPaths(resource_name,modules_json)
-    updateFilePublishPaths(resource_name, extmodules_json)
+    if modules_json:
+        updateFilePublishPaths(resource_name, modules_json)
+    else:
+        updateFilePublishPaths(resource_name, extmodules_json)
     updateFilePublishPaths(resource_name, services_json)
     # addXsedeAmqpToModules(modules_json,compute_json)
     if (publish_to_xsede):
-        addXsedeAmqpToExtModules(extmodules_json, compute_json)
+        if modules_json:
+            addXsedeAmqpToModules(modules_json, compute_json)
+        else:
+            addXsedeAmqpToExtModules(extmodules_json, compute_json)
         addXsedeAmqpToAbstractServices(services_json, compute_json)
-    # writeModulesWorkflow(resource_name,modules_json)
-    writeExtModulesWorkflow(resource_name, extmodules_json)
+    if modules_json:
+        writeModulesWorkflow(resource_name,modules_json)
+    else:
+        writeExtModulesWorkflow(resource_name, extmodules_json)
     writeAbstractServicesWorkflow(resource_name, services_json)
-    # writePeriodicModulesWorkflow(resource_name)
-    writePeriodicExtModulesWorkflow(resource_name)
+    if modules_json:
+        writePeriodicModulesWorkflow(resource_name)
+    else:
+        writePeriodicExtModulesWorkflow(resource_name)
     writePeriodicAbstractServicesWorkflow(resource_name)
-    # writeModulesInit(resource_name,module_names,env_vars)
-    writeExtModulesInit(resource_name, module_names, env_vars)
+    if modules_json:
+        writeModulesInit(resource_name,module_names,env_vars)
+    else:
+        writeExtModulesInit(resource_name, module_names, env_vars)
     writeAbstractServicesInit(resource_name, module_names, env_vars)
     ipfinfo_json = getIPFInfoJson()
     if (publish_to_xsede):
@@ -156,6 +174,10 @@ def getAbstractServicesJson():
 
 def getLModJson():
     return readWorkflowFile(os.path.join(getGlueWorkflowDir(), "templates", "lmod.json"))
+
+
+def getVALETJson():
+    return readWorkflowFile(os.path.join(getGlueWorkflowDir(), "templates", "valet.json"))
 
 
 def getIPFInfoJson():
@@ -771,7 +793,7 @@ def writeInit(resource_name, module_names, env_vars, name, path):
 
 def getModulesType():
     return options("What modules system is used on this resource?",
-                   ["lmod", "modules"])
+                   ["lmod", "modules", "valet"])
 
 
 def getSupportContact():
